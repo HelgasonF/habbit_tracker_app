@@ -61,3 +61,17 @@ enhancement, priority: medium
 Track persistent user activity  
 As an admin, I want to store user habit activity logs so that I can analyze progress and engagement over time.  
 enhancement, priority: medium
+
+External Data Integration
+
+See motivational quotes  
+As a user, I want to see a motivational quote each day so that I feel inspired to stick with my habits.  
+enhancement, priority: high
+
+Get new habit suggestions  
+As a user, I want to get new habit ideas based on my current progress so I can improve over time.  
+enhancement, priority: medium
+
+Adjust reminders to local time  
+As a user, I want my habit reminders to match my local time zone so I don't miss them when I travel.  
+enhancement, priority: medium
