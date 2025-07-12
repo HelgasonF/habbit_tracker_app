@@ -75,3 +75,17 @@ enhancement, priority: medium
 Adjust reminders to local time  
 As a user, I want my habit reminders to match my local time zone so I don't miss them when I travel.  
 enhancement, priority: medium
+
+Settings Menu
+
+Access settings menu  
+As a user, I want to access a settings menu from any screen so that I can adjust my preferences whenever I need.  
+enhancement, priority: high
+
+Categorized settings options  
+As a user, I want the settings menu to be organized into categories like Profile, Notifications, and Appearance so that I can quickly find the options I’m looking for.  
+enhancement, priority: medium
+
+Restrict access to sensitive settings  
+As an admin, I want to enable or disable certain settings for users so that the app remains secure and compliant.  
+enhancement, priority: low
