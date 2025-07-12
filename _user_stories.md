@@ -33,3 +33,17 @@ Access most-used features
 As a user, I want to access my most-used features from the home screen so that I can navigate efficiently.  
 enhancement, priority: high
 
+
+Detail Screen
+
+View detailed information  
+As a user, I want to view detailed information about a specific habit so that I can better understand its purpose and tracking details.  
+enhancement, priority: high
+
+Save or share habit info  
+As a user, I want to save a habit to my favorites or share it with others so that I can stay motivated and inspire others.  
+enhancement, priority: medium
+
+View related habits  
+As a user, I want to see related habits or suggestions on the detail screen so that I can explore similar routines and build a better habit plan.  
+enhancement, priority: medium
