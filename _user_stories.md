@@ -47,3 +47,17 @@ enhancement, priority: medium
 View related habits  
 As a user, I want to see related habits or suggestions on the detail screen so that I can explore similar routines and build a better habit plan.  
 enhancement, priority: medium
+
+Persistent Data
+
+Persist login state  
+As a user, I want my login state to persist across sessions so that I don’t have to log in every time I open the app.  
+enhancement, priority: high
+
+Save user preferences  
+As a user, I want my preferences like dark mode to be saved so that the app remembers my settings.  
+enhancement, priority: medium
+
+Track persistent user activity  
+As an admin, I want to store user habit activity logs so that I can analyze progress and engagement over time.  
+enhancement, priority: medium
