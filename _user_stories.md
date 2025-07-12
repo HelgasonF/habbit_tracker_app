@@ -89,3 +89,17 @@ enhancement, priority: medium
 Restrict access to sensitive settings  
 As an admin, I want to enable or disable certain settings for users so that the app remains secure and compliant.  
 enhancement, priority: low
+
+Settings Screen
+
+Enable dark mode  
+As a user, I want to enable dark mode in the settings screen so that I can reduce eye strain during nighttime usage.  
+enhancement, priority: high
+
+Adjust notification preferences  
+As a user, I want to manage which types of habit reminders I receive so that I only get the notifications that matter to me.  
+enhancement, priority: medium
+
+Update email and password  
+As a user, I want to update my email and password from the settings screen so that I can keep my account secure.  
+enhancement, priority: medium
