@@ -20,16 +20,3 @@ enhancement, priority: medium
 
 
 
-Home Screen
-
-View overview on home screen  
-As a user, I want to view an overview of my data on the home screen so that I can monitor my progress at a glance.  
-enhancement, priority: high
-
-Introductory guide for new users  
-As a new user, I want to see a quick guide on the home screen so that I can learn how to use the app.  
-enhancement, priority: medium
-
-Access most-used features  
-As a user, I want to access my most-used features from the home screen so that I can navigate efficiently.  
-enhancement, priority: high
