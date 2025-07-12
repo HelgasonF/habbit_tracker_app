@@ -1,4 +1,4 @@
-school_app User Story
+habbit_tracker_app User Story
 
 Login / Registration
 
