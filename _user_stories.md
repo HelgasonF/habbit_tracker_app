@@ -103,3 +103,21 @@ enhancement, priority: medium
 Update email and password  
 As a user, I want to update my email and password from the settings screen so that I can keep my account secure.  
 enhancement, priority: medium
+
+Notifications
+
+Receive daily reminders  
+As a user, I want to receive a daily notification reminding me to complete my habits so that I stay on track.  
+enhancement, priority: high
+
+Learn about new features  
+As a user, I want to get notifications when new features are added to the app so that I can take advantage of improvements.  
+enhancement, priority: medium
+
+Turn off promotional notifications  
+As a user, I want to turn off promotional messages while keeping important habit reminders so that I’m not overwhelmed.  
+enhancement, priority: medium
+
+Send targeted notifications  
+As an admin, I want to send habit-related notifications to specific users so that each group receives relevant updates.  
+enhancement, priority: low
