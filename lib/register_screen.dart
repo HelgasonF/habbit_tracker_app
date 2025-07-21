@@ -13,6 +13,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _customHabitController = TextEditingController();
 
   double _age = 25;
@@ -43,12 +44,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('name', _nameController.text.trim());
     await prefs.setString('username', _usernameController.text.trim());
+    await prefs.setString('password', _passwordController.text.trim());
     await prefs.setInt('age', _age.round());
     await prefs.setString('country', _country);
     await prefs.setStringList('habits', selectedHabits);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Registered & saved locally!')),
+    );
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 
@@ -126,6 +133,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _buildInputField(_nameController, 'Name'),
               const SizedBox(height: 16),
               _buildInputField(_usernameController, 'Username'),
+              const SizedBox(height: 16),
+              _buildInputField(_passwordController, 'Password', obscure: true),
               const SizedBox(height: 16),
               Text('Age: ${_age.round()}',
                   style: const TextStyle(color: Colors.white, fontSize: 18)),
@@ -249,7 +258,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildInputField(TextEditingController controller, String hint) {
+  Widget _buildInputField(TextEditingController controller, String hint,
+      {bool obscure = false}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -257,6 +267,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       child: TextField(
         controller: controller,
+        obscureText: obscure,
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
