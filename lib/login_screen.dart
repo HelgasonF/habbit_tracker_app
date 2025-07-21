@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'register_screen.dart';
+import 'home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,8 +15,34 @@ class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  void _login() {
-    print("login logic here");
+  Future<void> _login() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedUser = prefs.getString('username');
+    final storedPass = prefs.getString('password');
+    final enteredUser = _usernameController.text.trim();
+    final enteredPass = _passwordController.text.trim();
+
+    if (enteredUser.isEmpty || enteredPass.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter both username and password')),
+      );
+      return;
+    }
+
+    if (enteredUser == storedUser && enteredPass == storedPass) {
+      await prefs.setBool('isLoggedIn', true);
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid credentials')),
+      );
+    }
   }
 
   @override
