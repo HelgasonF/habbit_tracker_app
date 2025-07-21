@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +24,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final int maxHabits = 10;
 
+  // Basic color palette used to assign initial colors to habits
+  final List<Color> _palette = [
+    Colors.blue,
+    Colors.red,
+    Colors.green,
+    Colors.orange,
+    Colors.purple,
+    Colors.teal,
+    Colors.pink,
+    Colors.brown,
+  ];
+
+
   List<String> availableHabits = [
     'Gym',
     'Be Positive',
@@ -42,12 +57,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _register() async {
     final prefs = await SharedPreferences.getInstance();
+    // Persist basic profile information
     await prefs.setString('name', _nameController.text.trim());
     await prefs.setString('username', _usernameController.text.trim());
     await prefs.setString('password', _passwordController.text.trim());
     await prefs.setInt('age', _age.round());
     await prefs.setString('country', _country);
     await prefs.setStringList('habits', selectedHabits);
+
+    // Assign a color from the palette to each selected habit
+    int index = 0;
+    final colorMap = <String, int>{};
+    for (final habit in selectedHabits) {
+      colorMap[habit] = _palette[index % _palette.length].value;
+      index++;
+    }
+    await prefs.setString('habit_colors', jsonEncode(colorMap));
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Registered & saved locally!')),

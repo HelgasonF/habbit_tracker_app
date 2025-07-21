@@ -9,7 +9,7 @@ class ReportsScreen extends StatefulWidget {
 }
 
 class _ReportsScreenState extends State<ReportsScreen> {
-  Map<String, int> _weeklyCounts = {};
+  Map<String, int> _completedCounts = {};
   List<String> _habits = [];
 
   @override
@@ -31,7 +31,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
     setState(() {
       _habits = habits;
-      _weeklyCounts = counts;
+      _completedCounts = counts;
     });
   }
 
@@ -43,7 +43,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
         children: _habits
             .map((h) => ListTile(
                   title: Text(h),
-                  trailing: Text('${_weeklyCounts[h] ?? 0}/7'),
+                  subtitle: LinearProgressIndicator(
+                    value: (_completedCounts[h] ?? 0) / 7,
+                    minHeight: 6,
+                  ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Done ${_completedCounts[h] ?? 0}'),
+                      Text('Missed ${7 - (_completedCounts[h] ?? 0)}'),
+                    ],
+                  ),
                 ))
             .toList(),
       ),
