@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _name = '';
   List<String> _habits = [];
   final Map<String, bool> _todayStatus = {};
+  final Map<String, Color> _habitColors = {};
 
   @override
   void initState() {
@@ -30,6 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _name = prefs.getString('name') ?? '';
       _habits = prefs.getStringList('habits') ?? [];
+      // Restore stored colors for each habit
+      final colorData = prefs.getString('habit_colors');
+      if (colorData != null) {
+        final map = jsonDecode(colorData) as Map<String, dynamic>;
+        _habitColors.clear();
+        map.forEach((k, v) => _habitColors[k] = Color(v as int));
+      }
     });
     final today = DateTime.now().toIso8601String().split('T').first;
     for (final habit in _habits) {
@@ -73,9 +83,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHabitItem(String habit) {
+    final color = _habitColors[habit];
     return CheckboxListTile(
       title: Text(habit),
       value: _todayStatus[habit] ?? false,
+      activeColor: color,
       onChanged: (val) => _toggleHabit(habit, val),
     );
   }
@@ -163,7 +175,13 @@ class _HomeScreenState extends State<HomeScreen> {
               else
                 ..._habits
                     .where((h) => _todayStatus[h] == true)
-                    .map((h) => ListTile(title: Text(h)))
+                    .map((h) => ListTile(
+                          title: Text(h),
+                          leading: CircleAvatar(
+                            backgroundColor: _habitColors[h] ?? Colors.blue,
+                            radius: 8,
+                          ),
+                        ))
                     .toList(),
               ],
             ),

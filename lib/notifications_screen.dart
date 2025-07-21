@@ -12,7 +12,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   bool _enabled = false;
   List<String> _habits = [];
   final Set<String> _selectedHabits = {};
-  final Map<String, bool> _times = {
+  final Map<String, bool> _timeSlots = {
     'Morning': false,
     'Afternoon': false,
     'Evening': false,
@@ -30,8 +30,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       _enabled = prefs.getBool('notify_enabled') ?? false;
       _selectedHabits.addAll(prefs.getStringList('notify_habits') ?? []);
       _habits = prefs.getStringList('habits') ?? [];
-      for (final t in _times.keys) {
-        _times[t] = prefs.getBool('notify_${t.toLowerCase()}') ?? false;
+      for (final t in _timeSlots.keys) {
+        _timeSlots[t] = prefs.getBool('notify_${t.toLowerCase()}') ?? false;
       }
     });
   }
@@ -40,7 +40,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('notify_enabled', _enabled);
     await prefs.setStringList('notify_habits', _selectedHabits.toList());
-    for (final entry in _times.entries) {
+    for (final entry in _timeSlots.entries) {
       await prefs.setBool('notify_${entry.key.toLowerCase()}', entry.value);
     }
     if (!mounted) return;
@@ -74,10 +74,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               )),
           const Divider(),
           const Text('Times'),
-          ..._times.keys.map((t) => CheckboxListTile(
+          ..._timeSlots.keys.map((t) => CheckboxListTile(
                 title: Text(t),
-                value: _times[t],
-                onChanged: (v) => setState(() => _times[t] = v ?? false),
+                value: _timeSlots[t],
+                onChanged: (v) => setState(() => _timeSlots[t] = v ?? false),
               )),
           const SizedBox(height: 20),
           ElevatedButton(onPressed: _save, child: const Text('Save')),
