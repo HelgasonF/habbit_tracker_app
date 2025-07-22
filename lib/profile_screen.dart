@@ -13,7 +13,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _countryController = TextEditingController();
   double _age = 20;
   String _country = '';
 
@@ -31,7 +30,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _age = (prefs.getInt('age') ?? 20).toDouble();
       _passwordController.text = prefs.getString('password') ?? '';
       _country = prefs.getString('country') ?? '';
-      _countryController.text = _country;
     });
   }
 
@@ -41,7 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await prefs.setString('username', _usernameController.text.trim());
     await prefs.setInt('age', _age.round());
     await prefs.setString('password', _passwordController.text.trim());
-    _country = _countryController.text.trim();
     await prefs.setString('country', _country);
     if (!mounted) return;
     Navigator.pop(context);
@@ -52,7 +49,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _nameController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
-    _countryController.dispose();
     super.dispose();
   }
 
@@ -68,17 +64,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Name'),
             ),
+            const SizedBox(height: 16),
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(labelText: 'Username'),
             ),
+            const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            const SizedBox(height: 10),
-            Text('Age: \${_age.round()}'),
+            const SizedBox(height: 16),
+            Text(
+              'Age: \${_age.round()}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             Slider(
               value: _age,
               min: 10,
@@ -87,9 +88,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               activeColor: Colors.blue,
               onChanged: (v) => setState(() => _age = v),
             ),
+            const SizedBox(height: 16),
             _buildCountryPicker(),
             const SizedBox(height: 20),
-            ElevatedButton(onPressed: _save, child: const Text('Save')),
+            ElevatedButton(
+              onPressed: _save,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF5C85D6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+              ),
+              child: const Text(
+                'Save',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
           ],
         ),
       ),
@@ -104,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           showPhoneCode: false,
           onSelect: (country) {
             setState(() {
-              _countryController.text = country.name;
+              _country = country.name;
             });
           },
         );
@@ -120,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              _countryController.text.isEmpty ? 'Select Country' : _countryController.text,
+              _country.isEmpty ? 'Select Country' : _country,
               style: TextStyle(color: Colors.blue.shade700),
             ),
             Icon(Icons.arrow_drop_down, color: Colors.blue.shade700),
