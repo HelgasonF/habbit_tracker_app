@@ -91,9 +91,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: Container(
                         height: (_habits.isEmpty
-                                ? 0
+                                ? 0.0
                                 : (_dailyTotals[i] / _habits.length) * 100)
-                            .clamp(0, 100),
+                            .clamp(0.0, 100.0),
                         color: Colors.blueAccent,
                       ),
                     ),
