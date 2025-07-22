@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'habits_screen.dart';
 import 'login_screen.dart';
 import 'profile_screen.dart';
 import 'reports_screen.dart';
@@ -136,17 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              title: const Text('Habits'),
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const HabitsScreen()),
-                );
-                _loadData();
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
               title: const Text('Reports'),
               onTap: () {
                 Navigator.push(
@@ -219,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () async {
                       await Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const HabitsScreen()),
+                        MaterialPageRoute(builder: (_) => const HabitInfoScreen()),
                       );
                       _loadData();
                     },
