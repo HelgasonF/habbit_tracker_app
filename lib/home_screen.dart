@@ -83,13 +83,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHabitItem(String habit) {
+  Widget _buildTodoItem(String habit) {
     final color = _habitColors[habit] ?? habitColorPalette.first;
-    return CheckboxListTile(
-      title: Text(habit),
-      value: _todayStatus[habit] ?? false,
-      activeColor: color,
-      onChanged: (val) => _toggleHabit(habit, val),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(habit),
+          IconButton(
+            icon: Icon(Icons.check_circle, color: color),
+            onPressed: () => _toggleHabit(habit, true),
+          ),
+        ],
+      ),
     );
   }
 
@@ -97,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hello, $_name'),
+        title: const Text('Home'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -161,29 +173,62 @@ class _HomeScreenState extends State<HomeScreen> {
           ? const Center(child: Text('No habits yet'))
           : ListView(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text('Today', style: TextStyle(fontSize: 18)),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Welcome back, $_name',
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                 ),
-                ..._habits.map(_buildHabitItem).toList(),
-                const Divider(),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text('Completed', style: TextStyle(fontSize: 18)),
-              ),
-              if (_habits.where((h) => _todayStatus[h] == true).isEmpty)
-                const ListTile(title: Text('Nothing yet'))
-              else
-                ..._habits
-                    .where((h) => _todayStatus[h] == true)
-                    .map((h) => ListTile(
-                          title: Text(h),
-                          leading: CircleAvatar(
-                            backgroundColor: _habitColors[h] ?? Colors.blue,
-                            radius: 8,
-                          ),
-                        ))
-                    .toList(),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                  child: Text('To Do', style: TextStyle(fontSize: 18)),
+                ),
+                if (_habits.where((h) => !(_todayStatus[h] ?? false)).isEmpty)
+                  const ListTile(title: Text('All done!'))
+                else
+                  ..._habits
+                      .where((h) => !(_todayStatus[h] ?? false))
+                      .map(_buildTodoItem)
+                      .toList(),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HabitsScreen()),
+                      );
+                      _loadData();
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add'),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                  child: Text('Completed Today', style: TextStyle(fontSize: 18)),
+                ),
+                if (_habits.where((h) => _todayStatus[h] == true).isEmpty)
+                  const ListTile(title: Text('Nothing yet'))
+                else
+                  ..._habits
+                      .where((h) => _todayStatus[h] == true)
+                      .map((h) => Container(
+                            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow.shade100,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: _habitColors[h] ?? Colors.blue),
+                                const SizedBox(width: 8),
+                                Text(h),
+                              ],
+                            ),
+                          ))
+                      .toList(),
               ],
             ),
     );
