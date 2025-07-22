@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'constants.dart';
+
 class HabitsScreen extends StatefulWidget {
   const HabitsScreen({super.key});
 
@@ -15,17 +17,6 @@ class _HabitsScreenState extends State<HabitsScreen> {
   List<String> _habits = [];
   final Map<String, Color> _habitColors = {};
   Color _newColor = Colors.blue;
-
-  final List<Color> _palette = [
-    Colors.blue,
-    Colors.red,
-    Colors.green,
-    Colors.orange,
-    Colors.purple,
-    Colors.teal,
-    Colors.pink,
-    Colors.brown,
-  ];
 
   @override
   void initState() {
@@ -49,9 +40,9 @@ class _HabitsScreenState extends State<HabitsScreen> {
   Future<void> _addHabit() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
-    if (_habits.length >= 10) {
+    if (_habits.length >= maxHabits) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Maximum of 10 habits allowed')),
+        SnackBar(content: Text('Maximum of $maxHabits habits allowed')),
       );
       return;
     }
@@ -104,7 +95,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
           title: const Text('Select color'),
           content: Wrap(
             spacing: 8,
-            children: _palette
+            children: habitColorPalette
                 .map(
                   (c) => GestureDetector(
                     onTap: () => Navigator.pop(context, c),

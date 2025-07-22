@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'constants.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -21,20 +23,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   double _age = 25;
   String _country = 'Iceland';
   List<String> selectedHabits = [];
-
-  final int maxHabits = 10;
-
-  // Basic color palette used to assign initial colors to habits
-  final List<Color> _palette = [
-    Colors.blue,
-    Colors.red,
-    Colors.green,
-    Colors.orange,
-    Colors.purple,
-    Colors.teal,
-    Colors.pink,
-    Colors.brown,
-  ];
 
 
   List<String> availableHabits = [
@@ -69,7 +57,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     int index = 0;
     final colorMap = <String, int>{};
     for (final habit in selectedHabits) {
-      colorMap[habit] = _palette[index % _palette.length].value;
+      colorMap[habit] =
+          habitColorPalette[index % habitColorPalette.length].value;
       index++;
     }
     await prefs.setString('habit_colors', jsonEncode(colorMap));
