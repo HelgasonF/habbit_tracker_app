@@ -9,6 +9,8 @@ import 'profile_screen.dart';
 import 'reports_screen.dart';
 import 'notifications_screen.dart';
 import 'constants.dart';
+import 'habit_detail_screen.dart';
+import 'habit_info_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -83,24 +85,35 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _openDetail(String habit) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => HabitDetailScreen(habit: habit)),
+    );
+    _loadData();
+  }
+
   Widget _buildTodoItem(String habit) {
     final color = _habitColors[habit] ?? habitColorPalette.first;
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(habit),
-          IconButton(
-            icon: Icon(Icons.check_circle, color: color),
-            onPressed: () => _toggleHabit(habit, true),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => _openDetail(habit),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(habit),
+            IconButton(
+              icon: Icon(Icons.check_circle, color: color),
+              onPressed: () => _toggleHabit(habit, true),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -140,6 +153,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(builder: (_) => const ReportsScreen()),
                 );
+              },
+            ),
+            ListTile(
+              title: const Text('Habit Info'),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HabitInfoScreen()),
+                );
+                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -213,19 +236,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 else
                   ..._habits
                       .where((h) => _todayStatus[h] == true)
-                      .map((h) => Container(
-                            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.yellow.shade100,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.star, color: _habitColors[h] ?? Colors.blue),
-                                const SizedBox(width: 8),
-                                Text(h),
-                              ],
+                      .map((h) => GestureDetector(
+                            onTap: () => _openDetail(h),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.yellow.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.star, color: _habitColors[h] ?? Colors.blue),
+                                  const SizedBox(width: 8),
+                                  Text(h),
+                                ],
+                              ),
                             ),
                           ))
                       .toList(),
