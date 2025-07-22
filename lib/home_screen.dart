@@ -8,6 +8,7 @@ import 'login_screen.dart';
 import 'profile_screen.dart';
 import 'reports_screen.dart';
 import 'notifications_screen.dart';
+import 'constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -83,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHabitItem(String habit) {
-    final color = _habitColors[habit];
+    final color = _habitColors[habit] ?? habitColorPalette.first;
     return CheckboxListTile(
       title: Text(habit),
       value: _todayStatus[habit] ?? false,
