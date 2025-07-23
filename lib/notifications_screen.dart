@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'constants.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -67,56 +68,137 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Notifications')),
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        backgroundColor: Colors.purpleAccent,
+      ),
+      backgroundColor: pastelBackgrounds.first,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          SwitchListTile(
-            title: const Text('Enable Notifications'),
-            value: _enabled,
-            onChanged: (v) => setState(() => _enabled = v),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SwitchListTile(
+              title: const Text(
+                'Enable Notifications',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              value: _enabled,
+              onChanged: (v) => setState(() => _enabled = v),
+            ),
           ),
-          SwitchListTile(
-            title: const Text('Daily reminder'),
-            value: _dailyReminder,
-            onChanged: (v) => setState(() => _dailyReminder = v),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SwitchListTile(
+              title: const Text(
+                'Daily reminder',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              value: _dailyReminder,
+              onChanged: (v) => setState(() => _dailyReminder = v),
+            ),
           ),
-          SwitchListTile(
-            title: const Text('Streak Alerts'),
-            value: _streakAlerts,
-            onChanged: (v) => setState(() => _streakAlerts = v),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SwitchListTile(
+              title: const Text(
+                'Streak Alerts',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              value: _streakAlerts,
+              onChanged: (v) => setState(() => _streakAlerts = v),
+            ),
           ),
-          SwitchListTile(
-            title: const Text('Goal missed'),
-            value: _goalMissed,
-            onChanged: (v) => setState(() => _goalMissed = v),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SwitchListTile(
+              title: const Text(
+                'Goal missed',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              value: _goalMissed,
+              onChanged: (v) => setState(() => _goalMissed = v),
+            ),
           ),
           const Divider(),
-          const Text('Customize Alerts'),
-          const SizedBox(height: 10),
-          DropdownButton<String>(
-            value: _reminderTime,
-            items: const [
-              DropdownMenuItem(value: '08:00', child: Text('08:00')),
-              DropdownMenuItem(value: '12:00', child: Text('12:00')),
-              DropdownMenuItem(value: '18:00', child: Text('18:00')),
-            ],
-            onChanged: (v) => setState(() => _reminderTime = v ?? '08:00'),
-            isExpanded: true,
-            hint: const Text('Reminder Time'),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              'Customize Alerts',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
           ),
-          const SizedBox(height: 10),
-          DropdownButton<String>(
-            value: _reminderHabit,
-            hint: const Text('Add habit for reminder'),
-            isExpanded: true,
-            items: _habits
-                .map((h) => DropdownMenuItem(value: h, child: Text(h)))
-                .toList(),
-            onChanged: (v) => setState(() => _reminderHabit = v),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _reminderTime,
+                items: const [
+                  DropdownMenuItem(value: '08:00', child: Text('08:00')),
+                  DropdownMenuItem(value: '12:00', child: Text('12:00')),
+                  DropdownMenuItem(value: '18:00', child: Text('18:00')),
+                ],
+                onChanged: (v) =>
+                    setState(() => _reminderTime = v ?? '08:00'),
+                isExpanded: true,
+                hint: const Text('Reminder Time'),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _reminderHabit,
+                hint: const Text('Add habit for reminder'),
+                isExpanded: true,
+                items: _habits
+                    .map((h) => DropdownMenuItem(value: h, child: Text(h)))
+                    .toList(),
+                onChanged: (v) => setState(() => _reminderHabit = v),
+              ),
+            ),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(onPressed: _save, child: const Text('Save')),
+          Center(
+            child: ElevatedButton(
+              onPressed: _save,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                shape: const StadiumBorder(),
+              ),
+              child: const Text(
+                'Save',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
         ],
       ),
     );
