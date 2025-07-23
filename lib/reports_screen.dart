@@ -106,7 +106,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 : max(
                                         (_dailyTotals[i] / _habits.length) * 100,
                                         4)
-                                    .clamp(0.0, 100.0),
+                                    .clamp(0.0, 100.0)
+                                    .toDouble(),
                             decoration: BoxDecoration(
                               color: _dailyTotals[i] == 0
                                   ? Colors.grey.shade300
