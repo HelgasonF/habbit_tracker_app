@@ -93,27 +93,36 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHabitRow(String habit) {
-    final color = _habitColors[habit] ?? habitColorPalette.first;
-    final bg = pastelBackgrounds[_habits.indexOf(habit) % pastelBackgrounds.length];
+    final color = _habitColors[habit] ??
+        habitColorPalette[_habits.indexOf(habit) % habitColorPalette.length];
     final done = _todayStatus[habit] ?? false;
     return GestureDetector(
       onTap: () => _openDetail(habit),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(20),
+          color: color,
+          borderRadius: BorderRadius.circular(30),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(habit,
-                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+            Expanded(
+              child: Center(
+                child: Text(
+                  habit,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
             IconButton(
               icon: Icon(
                 done ? Icons.star : Icons.star_border,
-                color: done ? Colors.amber : Colors.grey,
+                color: done ? Colors.yellow.shade700 : Colors.black54,
               ),
               onPressed: () => _toggleHabit(habit, !done),
             ),
@@ -127,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.orangeAccent,
         title: const Text('Home'),
       ),
       drawer: Drawer(
@@ -204,17 +214,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: pastelBackgrounds[1],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: const Text(
                     'To Do',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange),
                   ),
                 ),
                 if (_habits.where((h) => !(_todayStatus[h] ?? false)).isEmpty)
@@ -225,36 +233,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       .map(_buildHabitRow)
                       .toList(),
                 Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: pastelBackgrounds[0],
-                      borderRadius: BorderRadius.circular(30),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HabitInfoScreen()),
+                      );
+                      _loadData();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(16),
+                      backgroundColor: Colors.orangeAccent,
                     ),
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const HabitInfoScreen()),
-                        );
-                        _loadData();
-                      },
-                      icon: const Icon(Icons.add),
-                      label: const Text('Add'),
-                      style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
-                    ),
+                    child: const Icon(Icons.add, color: Colors.white),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: pastelBackgrounds[2],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: const Text(
                     'Completed Today',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange),
                   ),
                 ),
                 if (_habits.where((h) => _todayStatus[h] == true).isEmpty)

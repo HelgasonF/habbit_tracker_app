@@ -17,9 +17,9 @@ const int maxHabits = 10;
 
 /// Pastel backgrounds used throughout the UI.
 const List<Color> pastelBackgrounds = [
-  Color(0xFFE2E8FF),
-  Color(0xFFD1FAE5),
-  Color(0xFFFDE68A),
+  Color(0xFF80DEEA), // vibrant cyan
+  Color(0xFFFFE082), // vibrant amber
+  Color(0xFFA5D6A7), // vibrant green
 ];
 
 /// Predefined habits offered during registration and editing.
