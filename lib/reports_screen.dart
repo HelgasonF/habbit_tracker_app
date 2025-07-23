@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,14 +30,21 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final prefs = await SharedPreferences.getInstance();
     final habits = prefs.getStringList('habits') ?? [];
     final now = DateTime.now();
-    final last7 = [for (int i = 0; i < 7; i++) now.subtract(Duration(days: i)).toIso8601String().split('T').first];
+    final last7 = {
+      for (int i = 0; i < 7; i++)
+        now.subtract(Duration(days: i)).toIso8601String().split('T').first
+    };
+
     final counts = <String, int>{};
-    final daily = List<int>.filled(7, 0);
+    final daily = List<int>.filled(7, 0); // Mon-Sun
     double streakSum = 0;
+
     for (final h in habits) {
       final key = 'habit_${h.replaceAll(' ', '_')}';
       final completed = prefs.getStringList(key) ?? [];
+
       counts[h] = completed.where((d) => last7.contains(d)).length;
+
       // streak calculation
       int streak = 0;
       var day = now;
@@ -44,25 +53,29 @@ class _ReportsScreenState extends State<ReportsScreen> {
         day = day.subtract(const Duration(days: 1));
       }
       streakSum += streak;
-      // daily totals
-      for (int i = 0; i < 7; i++) {
-        if (completed.contains(last7[i])) {
-          daily[i] += 1;
+
+      // daily totals per weekday
+      for (final d in completed) {
+        if (last7.contains(d)) {
+          final dt = DateTime.parse(d);
+          daily[dt.weekday - 1] += 1; // weekday 1=Mon
         }
       }
     }
-    // compute completion rate & best day
-    int totalCompletions = daily.fold(0, (a, b) => a + b);
-    double compRate = habits.isEmpty ? 0 : (totalCompletions / (habits.length * 7)) * 100;
-    int bestIndex = daily.indexOf(daily.reduce((a, b) => a > b ? a : b));
+
+    final totalCompletions = daily.fold(0, (a, b) => a + b);
+    final compRate =
+        habits.isEmpty ? 0 : (totalCompletions / (habits.length * 7)) * 100;
+    final bestIndex = daily.indexOf(daily.reduce((a, b) => a > b ? a : b));
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
     setState(() {
       _habits = habits;
       _completedCounts = counts;
-      _dailyTotals = daily.reversed.toList();
+      _dailyTotals = List<int>.from(daily);
       _averageStreak = habits.isEmpty ? 0 : streakSum / habits.length;
       _completionRate = compRate;
-      _bestDay = days[(6 - bestIndex) % 7];
+      _bestDay = days[bestIndex];
     });
   }
 
@@ -87,12 +100,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                            height: (_habits.isEmpty
-                                    ? 0.0
-                                    : (_dailyTotals[i] / _habits.length) * 100)
-                                .clamp(0.0, 100.0),
+                            height: _habits.isEmpty
+                                ? 0
+                                : max(
+                                        (_dailyTotals[i] / _habits.length) * 100,
+                                        4)
+                                    .clamp(0.0, 100.0),
                             decoration: BoxDecoration(
-                              color: habitColorPalette[i % habitColorPalette.length],
+                              color: _dailyTotals[i] == 0
+                                  ? Colors.grey.shade300
+                                  : habitColorPalette[
+                                      i % habitColorPalette.length
+                                    ],
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
