@@ -64,8 +64,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
 
     final totalCompletions = daily.fold(0, (a, b) => a + b);
-    final compRate =
-        habits.isEmpty ? 0 : (totalCompletions / (habits.length * 7)) * 100;
+    final compRate = habits.isEmpty
+        ? 0.0
+        : (totalCompletions / (habits.length * 7)) * 100;
     final bestIndex = daily.indexOf(daily.reduce((a, b) => a > b ? a : b));
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -73,7 +74,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       _habits = habits;
       _completedCounts = counts;
       _dailyTotals = List<int>.from(daily);
-      _averageStreak = habits.isEmpty ? 0 : streakSum / habits.length;
+      _averageStreak = habits.isEmpty ? 0.0 : streakSum / habits.length;
       _completionRate = compRate;
       _bestDay = days[bestIndex];
     });
@@ -101,7 +102,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         children: [
                           Container(
                             height: _habits.isEmpty
-                                ? 0
+                                ? 0.0
                                 : max(
                                         (_dailyTotals[i] / _habits.length) * 100,
                                         4)
