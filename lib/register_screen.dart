@@ -25,23 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   List<String> selectedHabits = [];
 
 
-  List<String> availableHabits = [
-    'Gym',
-    'Be Positive',
-    'Bed Early',
-    'Walk The Dog',
-    'Study',
-    'Drink Water',
-    'Read',
-    'Meditate',
-    'Eat Healthy',
-    'Sleep 8+ Hours',
-    'No Sugar',
-    'Gratitude',
-    'Journal',
-    'Stretch',
-    'Go Outside',
-  ];
+  List<String> availableHabits = List.from(predefinedHabits);
 
   void _register() async {
     final prefs = await SharedPreferences.getInstance();
