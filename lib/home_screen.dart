@@ -157,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(builder: (_) => const HabitInfoScreen()),
                 );
                 Navigator.pop(context);
+                _loadData();
               },
             ),
             ListTile(
