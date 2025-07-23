@@ -71,17 +71,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStat('Total', _habits.length.toString(), Colors.blue),
-              _buildStat('Avg Streak', _averageStreak.toStringAsFixed(1), Colors.green),
-              _buildStat('Completion', '${_completionRate.toStringAsFixed(0)}%', Colors.orange),
-            ],
-          ),
           const SizedBox(height: 20),
           SizedBox(
-            height: 120,
+            height: 140,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -89,12 +81,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Container(
-                        height: (_habits.isEmpty
-                                ? 0.0
-                                : (_dailyTotals[i] / _habits.length) * 100)
-                            .clamp(0.0, 100.0),
-                        color: Colors.blueAccent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            height: (_habits.isEmpty
+                                    ? 0.0
+                                    : (_dailyTotals[i] / _habits.length) * 100)
+                                .clamp(0.0, 100.0),
+                            decoration: BoxDecoration(
+                              color: habitColorPalette[i % habitColorPalette.length],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]),
+                        ],
                       ),
                     ),
                   ),
@@ -127,23 +129,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildStat(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Text(label),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
+  
 }
 

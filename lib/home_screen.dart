@@ -92,24 +92,30 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadData();
   }
 
-  Widget _buildTodoItem(String habit) {
+  Widget _buildHabitRow(String habit) {
     final color = _habitColors[habit] ?? habitColorPalette.first;
+    final bg = pastelBackgrounds[_habits.indexOf(habit) % pastelBackgrounds.length];
+    final done = _todayStatus[habit] ?? false;
     return GestureDetector(
       onTap: () => _openDetail(habit),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: bg,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(habit),
+            Text(habit,
+                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
             IconButton(
-              icon: Icon(Icons.check_circle, color: color),
-              onPressed: () => _toggleHabit(habit, true),
+              icon: Icon(
+                done ? Icons.star : Icons.star_border,
+                color: done ? Colors.amber : Colors.grey,
+              ),
+              onPressed: () => _toggleHabit(habit, !done),
             ),
           ],
         ),
@@ -184,64 +190,78 @@ class _HomeScreenState extends State<HomeScreen> {
           ? const Center(child: Text('No habits yet'))
           : ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: pastelBackgrounds.first,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Text(
                     'Welcome back, $_name',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                  child: Text('To Do', style: TextStyle(fontSize: 18)),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: pastelBackgrounds[1],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    'To Do',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
                 ),
                 if (_habits.where((h) => !(_todayStatus[h] ?? false)).isEmpty)
                   const ListTile(title: Text('All done!'))
                 else
                   ..._habits
                       .where((h) => !(_todayStatus[h] ?? false))
-                      .map(_buildTodoItem)
+                      .map(_buildHabitRow)
                       .toList(),
                 Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const HabitInfoScreen()),
-                      );
-                      _loadData();
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add'),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: pastelBackgrounds[0],
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const HabitInfoScreen()),
+                        );
+                        _loadData();
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add'),
+                      style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
+                    ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                  child: Text('Completed Today', style: TextStyle(fontSize: 18)),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: pastelBackgrounds[2],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    'Completed Today',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
                 ),
                 if (_habits.where((h) => _todayStatus[h] == true).isEmpty)
                   const ListTile(title: Text('Nothing yet'))
                 else
                   ..._habits
                       .where((h) => _todayStatus[h] == true)
-                      .map((h) => GestureDetector(
-                            onTap: () => _openDetail(h),
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.yellow.shade100,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.star, color: _habitColors[h] ?? Colors.blue),
-                                  const SizedBox(width: 8),
-                                  Text(h),
-                                ],
-                              ),
-                            ),
-                          ))
+                      .map(_buildHabitRow)
                       .toList(),
               ],
             ),
