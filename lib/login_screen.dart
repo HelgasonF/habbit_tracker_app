@@ -12,25 +12,25 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   Future<void> _login() async {
     final prefs = await SharedPreferences.getInstance();
-    final storedUser = prefs.getString('username');
+    final storedEmail = prefs.getString('email');
     final storedPass = prefs.getString('password');
-    final enteredUser = _usernameController.text.trim();
+    final enteredEmail = _emailController.text.trim();
     final enteredPass = _passwordController.text.trim();
 
-    if (enteredUser.isEmpty || enteredPass.isEmpty) {
+    if (enteredEmail.isEmpty || enteredPass.isEmpty) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter both username and password')),
+        const SnackBar(content: Text('Enter both email and password')),
       );
       return;
     }
 
-    if (enteredUser == storedUser && enteredPass == storedPass) {
+    if (enteredEmail == storedEmail && enteredPass == storedPass) {
       await prefs.setBool('isLoggedIn', true);
       if (!mounted) return;
       Navigator.pushReplacement(
@@ -66,10 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 40),
 
-              // Username input
+              // Email input
               _buildInputField(
-                hintText: 'Enter Username',
-                controller: _usernameController,
+                hintText: 'Enter Email',
+                controller: _emailController,
               ),
               const SizedBox(height: 20),
 

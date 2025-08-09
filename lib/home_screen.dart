@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _name = prefs.getString('name') ?? '';
+      _name = prefs.getString('username') ?? 'User';
       _habits = prefs.getStringList('habits') ?? [];
       // Restore stored colors for each habit
       final colorData = prefs.getString('habit_colors');
@@ -164,7 +164,25 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orangeAccent,
-        title: const Text('Home'),
+        title: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(
+                Icons.track_changes,
+                color: Colors.orangeAccent,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text('Habit Tracker'),
+          ],
+        ),
       ),
       drawer: Drawer(
         child: ListView(

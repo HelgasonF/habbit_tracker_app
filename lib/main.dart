@@ -65,13 +65,18 @@ class _HabitTrackerAppState extends State<HabitTrackerApp> {
 
               final appState = snapshot.data!;
               
-              // Show onboarding if not completed
+              // If not logged in, show login screen first
+              if (!appState.isLoggedIn) {
+                return const LoginScreen();
+              }
+              
+              // If logged in but onboarding not completed, show onboarding
               if (!appState.onboardingCompleted) {
                 return const OnboardingScreen();
               }
               
-              // Show home or login based on auth state
-              return appState.isLoggedIn ? const HomeScreen() : const LoginScreen();
+              // If logged in and onboarding completed, show home
+              return const HomeScreen();
             },
           ),
         );

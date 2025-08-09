@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
 import 'login_screen.dart';
+import 'onboarding_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,8 +16,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _customHabitController = TextEditingController();
 
@@ -28,10 +29,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
   List<String> availableHabits = List.from(predefinedHabits);
 
   void _register() async {
+    // Validation
+    if (_usernameController.text.trim().isEmpty || 
+        _emailController.text.trim().isEmpty || 
+        _passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Username, email, and password are required'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (!_emailController.text.trim().contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid email address'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_passwordController.text.trim().length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password must be at least 6 characters long'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     // Persist basic profile information
-    await prefs.setString('name', _nameController.text.trim());
     await prefs.setString('username', _usernameController.text.trim());
+    await prefs.setString('email', _emailController.text.trim());
     await prefs.setString('password', _passwordController.text.trim());
     await prefs.setInt('age', _age.round());
     await prefs.setString('country', _country);
@@ -47,13 +81,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     await prefs.setString('habit_colors', jsonEncode(colorMap));
 
+    // Mark user as logged in and set onboarding as pending
+    await prefs.setBool('isLoggedIn', true);
+    await prefs.setBool('onboarding_completed', false);
+
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Registered & saved locally!')),
+      const SnackBar(content: Text('Registered successfully!')),
     );
     if (!mounted) return;
+    
+    // Navigate to onboarding for new users
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      MaterialPageRoute(builder: (_) => const OnboardingScreen()),
     );
   }
 
@@ -128,9 +168,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              _buildInputField(_nameController, 'Name'),
-              const SizedBox(height: 16),
               _buildInputField(_usernameController, 'Username'),
+              const SizedBox(height: 16),
+              _buildInputField(_emailController, 'Email'),
               const SizedBox(height: 16),
               _buildInputField(_passwordController, 'Password', obscure: true),
               const SizedBox(height: 16),

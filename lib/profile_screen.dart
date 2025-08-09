@@ -10,8 +10,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   double _age = 20;
   String _country = '';
@@ -25,8 +25,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _nameController.text = prefs.getString('name') ?? '';
       _usernameController.text = prefs.getString('username') ?? '';
+      _emailController.text = prefs.getString('email') ?? '';
       _age = (prefs.getInt('age') ?? 20).toDouble();
       _passwordController.text = prefs.getString('password') ?? '';
       _country = prefs.getString('country') ?? '';
@@ -35,8 +35,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _save() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('name', _nameController.text.trim());
     await prefs.setString('username', _usernameController.text.trim());
+    await prefs.setString('email', _emailController.text.trim());
     await prefs.setInt('age', _age.round());
     await prefs.setString('password', _passwordController.text.trim());
     await prefs.setString('country', _country);
@@ -46,8 +46,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -61,13 +61,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
             TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              controller: _usernameController,
+              decoration: const InputDecoration(labelText: 'Username'),
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             const SizedBox(height: 16),
             TextField(
