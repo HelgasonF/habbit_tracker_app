@@ -23,6 +23,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   bool _goalMissed = false;
   String _reminderTime = '08:00';
   String? _reminderHabit;
+  String _timeZone = 'Auto';
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       _goalMissed = prefs.getBool('goal_missed') ?? false;
       _reminderTime = prefs.getString('reminder_time') ?? '08:00';
       _reminderHabit = prefs.getString('reminder_habit');
+      _timeZone = prefs.getString('timezone') ?? 'Auto';
     });
   }
 
@@ -61,6 +63,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     if (_reminderHabit != null) {
       await prefs.setString('reminder_habit', _reminderHabit!);
     }
+    await prefs.setString('timezone', _timeZone);
     if (!mounted) return;
     Navigator.pop(context);
   }
@@ -182,6 +185,30 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     .map((h) => DropdownMenuItem(value: h, child: Text(h)))
                     .toList(),
                 onChanged: (v) => setState(() => _reminderHabit = v),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _timeZone,
+                hint: const Text('Select Time Zone'),
+                isExpanded: true,
+                items: const [
+                  DropdownMenuItem(value: 'Auto', child: Text('Auto (System Default)')),
+                  DropdownMenuItem(value: 'UTC-8 (Pacific)', child: Text('UTC-8 (Pacific)')),
+                  DropdownMenuItem(value: 'UTC-5 (Eastern)', child: Text('UTC-5 (Eastern)')),
+                  DropdownMenuItem(value: 'UTC+0 (GMT)', child: Text('UTC+0 (GMT)')),
+                  DropdownMenuItem(value: 'UTC+1 (Central Europe)', child: Text('UTC+1 (Central Europe)')),
+                  DropdownMenuItem(value: 'UTC+9 (Japan)', child: Text('UTC+9 (Japan)')),
+                ],
+                onChanged: (v) => setState(() => _timeZone = v ?? 'Auto'),
               ),
             ),
           ),

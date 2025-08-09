@@ -7,9 +7,13 @@ import 'login_screen.dart';
 import 'profile_screen.dart';
 import 'reports_screen.dart';
 import 'notifications_screen.dart';
+import 'settings_screen.dart';
+import 'habit_suggestions_screen.dart';
 import 'constants.dart';
 import 'habit_detail_screen.dart';
 import 'habit_info_screen.dart';
+import 'services/api_service.dart';
+import 'services/theme_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,11 +27,34 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> _habits = [];
   final Map<String, bool> _todayStatus = {};
   final Map<String, Color> _habitColors = {};
+  String _dailyQuote = '';
+  String _quoteAuthor = '';
+  bool _isLoadingQuote = true;
+  late ThemeService _themeService;
 
   @override
   void initState() {
     super.initState();
+    _themeService = ThemeService();
     _loadData();
+    _loadDailyQuote();
+  }
+
+  Future<void> _loadDailyQuote() async {
+    try {
+      final quote = await ApiService.fetchDailyQuote();
+      setState(() {
+        _dailyQuote = quote['content']!;
+        _quoteAuthor = quote['author']!;
+        _isLoadingQuote = false;
+      });
+    } catch (e) {
+      setState(() {
+        _dailyQuote = 'Stay motivated and keep going!';
+        _quoteAuthor = 'Unknown';
+        _isLoadingQuote = false;
+      });
+    }
   }
 
   Future<void> _loadData() async {
@@ -151,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.assessment),
               title: const Text('Reports'),
               onTap: () {
                 Navigator.push(
@@ -160,6 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.info),
               title: const Text('Habit Info'),
               onTap: () async {
                 await Navigator.push(
@@ -171,6 +200,19 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.lightbulb),
+              title: const Text('Habit Suggestions'),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HabitSuggestionsScreen()),
+                );
+                Navigator.pop(context);
+                _loadData();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
               title: const Text('Profile'),
               onTap: () async {
                 await Navigator.push(
@@ -181,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.notifications),
               title: const Text('Notifications'),
               onTap: () async {
                 await Navigator.push(
@@ -191,6 +234,19 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => SettingsScreen(themeService: _themeService)),
+                );
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout),
               title: const Text('Sign Out'),
               onTap: _signOut,
             ),
@@ -214,6 +270,60 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
+                // Daily Quote Card
+                if (!_isLoadingQuote)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.blue.withOpacity(0.1), Colors.purple.withOpacity(0.1)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.format_quote, color: Colors.blue[600], size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Daily Inspiration',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.blue[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _dailyQuote,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '— $_quoteAuthor',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
