@@ -14,6 +14,7 @@ import 'habit_detail_screen.dart';
 import 'habit_info_screen.dart';
 import 'services/api_service.dart';
 import 'services/theme_service.dart';
+import 'services/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -93,6 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!completedDates.contains(today)) {
         completedDates.add(today);
         await prefs.setStringList(key, completedDates);
+        
+        // Check for streak notifications when habit is completed
+        await NotificationService().checkStreakNotifications();
       }
     } else {
       completedDates.remove(today);

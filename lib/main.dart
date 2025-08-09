@@ -5,9 +5,17 @@ import 'login_screen.dart';
 import 'home_screen.dart';
 import 'onboarding_screen.dart';
 import 'services/theme_service.dart';
+import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize timezone data for notifications
+  initializeTimezones();
+  
+  // Initialize notification service
+  await NotificationService().initialize();
+  
   runApp(HabitTrackerApp());
 }
 

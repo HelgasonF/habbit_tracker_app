@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
+import 'services/notification_service.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -64,8 +65,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       await prefs.setString('reminder_habit', _reminderHabit!);
     }
     await prefs.setString('timezone', _timeZone);
+    
+    // Setup notifications with the notification service
+    await NotificationService().setupHabitReminders();
+    
     if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Notification settings saved!'),
+        backgroundColor: Colors.green,
+      ),
+    );
     Navigator.pop(context);
+  }
+
+  Future<void> _sendTestNotification() async {
+    await NotificationService().sendTestNotification();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Test notification sent!'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   @override
@@ -213,6 +234,27 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
           ),
           const SizedBox(height: 20),
+          
+          // Test Notification Button
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton.icon(
+              onPressed: _sendTestNotification,
+              icon: const Icon(Icons.notifications_active),
+              label: const Text('Send Test Notification'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: 16),
           Center(
             child: ElevatedButton(
               onPressed: _save,
@@ -221,7 +263,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 shape: const StadiumBorder(),
               ),
               child: const Text(
-                'Save',
+                'Save Settings',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),

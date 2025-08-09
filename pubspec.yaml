@@ -38,6 +38,7 @@ dependencies:
   fluttertoast: ^8.2.12
   http: ^1.4.0
   flutter_local_notifications: ^19.3.1
+  timezone: ^0.10.1
   country_picker: ^2.0.21
   google_fonts: ^6.1.0
 dev_dependencies:
